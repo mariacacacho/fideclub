@@ -28,7 +28,8 @@ const SignInScreen = () => {
   const handleSignIn = () => {
     // Handle sign in logic here
     console.log("Sign in with:", email, password);
-    // In a real app, you would call an authentication service
+    // For now, navigate directly to Dashboard
+    navigation.navigate("Dashboard");
   };
 
   return (
