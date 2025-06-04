@@ -35,6 +35,11 @@ const DashboardScreen = () => {
           style={styles.logo}
           resizeMode="contain"
         />
+        <Image
+          source={require("../../assets/images/image-user.png")}
+          style={styles.logoUser}
+          resizeMode="contain"
+        />
       </View>
 
       <Text style={styles.title}>Hola, María</Text>
@@ -123,7 +128,9 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    alignItems: "flex-start",
+    flexDirection: 'row',
+    alignContent: "center",
+    justifyContent: "space-between",
     marginTop: 70,
     marginBottom: 10,
   },
@@ -153,6 +160,10 @@ const styles = StyleSheet.create({
   branchLabel: {
     fontSize: 16,
     fontWeight: "bold",
+  },
+  logoUser: {
+    width: 22,
+    height: 22
   },
   changeButton: {
     backgroundColor: "#333",
