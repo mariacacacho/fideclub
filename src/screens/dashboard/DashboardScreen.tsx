@@ -8,6 +8,14 @@ import {
   ScrollView,
   FlatList,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../navigation/AppNavigator";
+
+type DashboardScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "Dashboard"
+>;
 
 const barbershopData = [
   { id: '1', image: require('../../assets/images/barbershop-placeholder.png') },
@@ -21,6 +29,7 @@ const barbershopData = [
 ];
 
 const DashboardScreen = () => {
+  const navigation = useNavigation<DashboardScreenNavigationProp>();
   const renderBarbershopItem = ({ item }) => (
     <TouchableOpacity style={styles.barbershopItem}>
       <Image source={item.image} style={styles.barbershopImage} />
@@ -53,7 +62,18 @@ const DashboardScreen = () => {
       </View>
 
       <View style={styles.barbershopSection}>
-        <Text style={styles.sectionTitle}>Nombre barbería</Text>
+        <View style={styles.barbershopHeader}>
+          <Text style={styles.sectionTitle}>Nombre barbería</Text>
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={() => navigation.navigate("EditCard")}
+          >
+            <Image 
+              source={require("../../assets/images/edit.png")} 
+              style={styles.editIcon} 
+            />
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={barbershopData}
           renderItem={renderBarbershopItem}
@@ -63,14 +83,23 @@ const DashboardScreen = () => {
         />
       </View>
 
+      <View style={styles.separator}>
+
+      </View>
+
       <View style={styles.qrSection}>
         <View style={styles.sectionHeader}>
-          <Image
-            source={require("../../assets/images/qr-icon.png")}
-            style={styles.sectionIcon}
-          />
+          <View style={styles.logoSection}>
+            <Image
+              source={require("../../assets/images/qr-icon.png")}
+              style={styles.sectionIcon}
+            />
+          </View>
           <Text style={styles.sectionTitle}>QR</Text>
-          <TouchableOpacity style={styles.viewButton}>
+          <TouchableOpacity 
+            style={styles.viewButton}
+            onPress={() => navigation.navigate("QR")}
+          >
             <Text style={styles.viewButtonText}>Ver QR</Text>
           </TouchableOpacity>
         </View>
@@ -78,8 +107,14 @@ const DashboardScreen = () => {
           El QR está listo para que tus clientes lo puedan escanear.
         </Text>
         <View style={styles.statusContainer}>
-          <Text style={styles.statusText}>✓ Activo</Text>
-          <Text style={styles.statusText}>✓ Publicado, listo para escanear</Text>
+          <View style={styles.textCheckIcon}>
+            <Image source={require("../../assets/images/check.png")} style={styles.checkIcon} />
+            <Text style={styles.statusText}>Activo</Text>
+          </View>
+          <View style={styles.textCheckIcon}>
+            <Image source={require("../../assets/images/check.png")} style={styles.checkIcon}/>
+            <Text style={styles.statusText}>Publicado, listo para escanear</Text>
+          </View>
         </View>
       </View>
 
@@ -92,7 +127,10 @@ const DashboardScreen = () => {
           />
           </View>
           <Text style={styles.sectionTitle}>Analytics</Text>
-          <TouchableOpacity style={styles.viewButton}>
+          <TouchableOpacity 
+            style={styles.viewButton}
+            onPress={() => navigation.navigate("QR")}
+          >
             <Text style={styles.viewButtonText}>Ver más</Text>
           </TouchableOpacity>
         </View>
@@ -100,8 +138,14 @@ const DashboardScreen = () => {
           Puedes consultar el estado de tus análisis aquí
         </Text>
         <View style={styles.statusContainer}>
-          <Text style={styles.statusText}>✓ Activo</Text>
-          <Text style={styles.statusText}>✓ Actualizado: 30 mayo 2025</Text>
+          <View style={styles.textCheckIcon}>
+            <Image source={require("../../assets/images/check.png")} style={styles.checkIcon}/>
+            <Text style={styles.statusText}>Activo</Text>
+          </View>
+          <View style={styles.textCheckIcon}>
+            <Image source={require("../../assets/images/check.png")} style={styles.checkIcon}/>
+            <Text style={styles.statusText}>Actualizado: 30 mayo 2025</Text>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -129,14 +173,14 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     flexDirection: 'row',
-    alignContent: "center",
+    alignContent: "flex-start",
     justifyContent: "space-between",
     marginTop: 70,
-    marginBottom: 10,
+    marginBottom: 30,
   },
   logo: {
-    width: 150,
-    height: 40,
+    width: 160,
+    height: 'auto',
   },
   title: {
     fontSize: 32,
@@ -161,6 +205,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  checkIcon: {
+    width: 15,
+    height: 15,
+    marginRight: 6
+  },
+  textCheckIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   logoUser: {
     width: 22,
     height: 22
@@ -179,33 +233,55 @@ const styles = StyleSheet.create({
     backgroundColor: "#24252A",
     padding: 5,
     borderRadius: '50%',
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     alignItems: "center",
     justifyContent: "center",
   },
   barbershopSection: {
     marginHorizontal: 20,
     padding: 18,
-    marginBottom: 20,
-    borderRadius: 10,
+    marginBottom: 10,
+    borderRadius: 15,
     backgroundColor: "#F3F3F3",
+  },
+  barbershopHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  editButton: {
+    backgroundColor: "#F26E21",
+    width: 28,
+    height: 28,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  editIcon: {
+    width: 14,
+    height: 14,
+    tintColor: "#FFFFFF",
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+    marginLeft: 10
   },
   qrSection: {
     backgroundColor: "#FDF4EE",
     padding: 20,
     marginBottom: 20,
     marginHorizontal: 20,
+    borderRadius: 15,
   },
   analyticsSection: {
-    backgroundColor: "#FDF4EE",
+    backgroundColor: "#FFF8E3",
     padding: 20,
     marginHorizontal: 20,
+    borderRadius: 15
   },
   sectionHeader: {
     flexDirection: "row",
@@ -213,9 +289,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sectionIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 10,
+    width: 20,
+    height: 20,
   },
   viewButton: {
     borderColor: "#24252A",
@@ -233,13 +308,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
     marginBottom: 10,
+    borderBottomWidth: 1,
+    borderColor: '#C0C0C0',
+    paddingBottom: 15,
+  },
+  separator: {
+    borderBottomWidth: 1,
+    marginBottom: 20,
+    borderColor: '#E9E9E9',
+    paddingBottom: 15,
+    marginHorizontal: 22,
   },
   statusContainer: {
-    marginTop: 10,
+    marginTop: 5,
+    flexDirection: 'row'
   },
   statusText: {
     fontSize: 14,
-    marginBottom: 5,
+    marginRight: 15,
   },
 });
 

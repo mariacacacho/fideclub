@@ -7,6 +7,8 @@ import LoadingScreen from '../screens/loading/LoadingScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignUpScreen from '../screens/auth/SignUpScreen';
 import DashboardScreen from '../screens/dashboard/DashboardScreen';
+import QRScreen from '../screens/qr/QRScreen';
+import EditCardScreen from '../screens/edit/EditCardScreen';
 
 // Define the stack navigator param list
 export type RootStackParamList = {
@@ -14,6 +16,8 @@ export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   Dashboard: undefined;
+  QR: undefined;
+  EditCard: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -32,6 +36,8 @@ const AppNavigator = () => {
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Dashboard" component={DashboardScreen} />
+        <Stack.Screen name="QR" component={QRScreen} />
+        <Stack.Screen name="EditCard" component={EditCardScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
