@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // Import screens
 import LoadingScreen from '../screens/loading/LoadingScreen';
@@ -15,8 +16,17 @@ import QRScreen from '../screens/qr/QRScreen';
 import EditCardScreen from '../screens/edit/EditCardScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import MainScreen from '../screens/main/MainScreen';
+import ConfigurationScreen from '../screens/configuration/ConfigurationScreen';
+
+// Import NavBar
+import NavBar from '../components/common/NavBar';
 
 // Define the stack navigator param list
+export type MainTabParamList = {
+  Main: undefined;
+  Configuration: undefined;
+};
+
 export type RootStackParamList = {
   Loading: undefined;
   EmailSignUp: undefined;
@@ -76,10 +86,26 @@ export type RootStackParamList = {
     };
   };
   Profile: undefined;
-  Main: undefined;
+  MainTabs: {
+    screen?: keyof MainTabParamList;
+  };
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const MainTabs = () => {
+  return (
+    <Tab.Navigator 
+      id={undefined}
+      tabBar={props => <NavBar {...props} />} 
+      screenOptions={{ headerShown: false }}
+    >
+      <Tab.Screen name="Main" component={MainScreen} />
+      <Tab.Screen name="Configuration" component={ConfigurationScreen} />
+    </Tab.Navigator>
+  );
+};
 
 const AppNavigator = () => {
   return (
@@ -102,7 +128,7 @@ const AppNavigator = () => {
         <Stack.Screen name="QR" component={QRScreen} />
         <Stack.Screen name="EditCard" component={EditCardScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
-        <Stack.Screen name="Main" component={MainScreen} />
+        <Stack.Screen name="MainTabs" component={MainTabs} />
       </Stack.Navigator>
     </NavigationContainer>
   );

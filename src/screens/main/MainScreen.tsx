@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../navigation/AppNavigator';
-
+import { MainTabParamList } from '../../navigation/AppNavigator';
+import { LinearGradient } from 'expo-linear-gradient';
 type MainScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
+  MainTabParamList,
   'Main'
 >;
 
@@ -44,7 +44,7 @@ const MainScreen = () => {
       <View style={styles.header}>
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../assets/images/logo-fideclub-inside.png')}
+            source={require('../../assets/images/logofideclub-color.png')}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -53,7 +53,7 @@ const MainScreen = () => {
           style={styles.branchSelector}
           onPress={() => setDropdownVisible(true)}
         >
-          <Text style={styles.branchText}>{selectedBranch}</Text>
+          <Text style={styles.branchText}>Sucursal: {selectedBranch}</Text>
           <Image
             source={require('../../assets/images/arrowdown-icon.png')}
             style={styles.arrowIcon}
@@ -115,50 +115,20 @@ const MainScreen = () => {
 
         {/* Scan Client Button */}
         <TouchableOpacity 
-          style={styles.scanButton}
           onPress={handleScanClient}
         >
-          <Image
-            source={require('../../assets/images/qr-icon.png')}
-            style={styles.scanIcon}
-          />
-          <Text style={styles.scanText}>Escanear cliente</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Image
-            source={require('../../assets/images/card-icon.png')}
-            style={[styles.navIcon, { tintColor: '#AAAAAA' }]}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Image
-            source={require('../../assets/images/card-icon.png')}
-            style={[styles.navIcon, { tintColor: '#AAAAAA' }]}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.navItem, styles.centerNavItem]}>
-          <View style={styles.centerNavButton}>
+          <LinearGradient
+            colors={['#4CD4C0', '#4A90E2']}
+            style={styles.scanButton}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
             <Image
               source={require('../../assets/images/qr-icon.png')}
-              style={[styles.navIcon, { tintColor: '#FFFFFF' }]}
+              style={styles.scanIcon}
             />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Image
-            source={require('../../assets/images/analytics-icon.png')}
-            style={[styles.navIcon, { tintColor: '#AAAAAA' }]}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Image
-            source={require('../../assets/images/image-user.png')}
-            style={[styles.navIcon, { tintColor: '#AAAAAA' }]}
-          />
+            <Text style={styles.scanText}>Escanear cliente</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -168,14 +138,14 @@ const MainScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8F8F8',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 20,
     paddingBottom: 20,
   },
   logoContainer: {
@@ -183,20 +153,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 150,
+    width: 120,
     height: 40,
   },
   branchSelector: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
+    borderColor: '#DCDCDC',
+    borderWidth: 0.2,
   },
   branchText: {
     fontSize: 14,
-    fontWeight: '500',
     marginRight: 5,
   },
   arrowIcon: {
@@ -256,7 +227,7 @@ const styles = StyleSheet.create({
   },
   businessInfo: {
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 20,
   },
   businessName: {
     fontSize: 28,
@@ -272,7 +243,6 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: '#4A90E2',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -291,40 +261,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#FFFFFF',
-  },
-  bottomNav: {
-    flexDirection: 'row',
-    height: 70,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#EEEEEE',
-    paddingBottom: 10,
-  },
-  navItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  centerNavItem: {
-    justifyContent: 'flex-start',
-    marginTop: -30,
-  },
-  centerNavButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#4A90E2',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  navIcon: {
-    width: 24,
-    height: 24,
   },
 });
 

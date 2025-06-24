@@ -103,7 +103,10 @@ const EditCardScreen = () => {
   // Function to handle skip button
   const handleSkip = () => {
     // Navigate to Main screen
-    navigation.navigate('Main');
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'MainTabs' }],
+    });
   };
 
   // Function to save changes and navigate back
@@ -226,7 +229,7 @@ const EditCardScreen = () => {
                 onPress={() => toggleSection('color')}
               >
                 <View style={styles.sectionTitleContainer}>
-                  <Image source={require('../../assets/images/card-icon.png')} style={styles.sectionIcon} />
+                  <Image source={require('../../assets/images/card-color.png')} style={styles.sectionIcon} />
                   <Text style={styles.sectionTitle}>Color de la tarjeta</Text>
                 </View>
                 <Image 
@@ -261,7 +264,7 @@ const EditCardScreen = () => {
                 onPress={() => toggleSection('stamp')}
               >
                 <View style={styles.sectionTitleContainer}>
-                  <Image source={require('../../assets/images/camera-icon.png')} style={styles.sectionIcon} />
+                  <Image source={require('../../assets/images/card-stamp.png')} style={styles.sectionIcon} />
                   <Text style={styles.sectionTitle}>Sello</Text>
                 </View>
                 <Image 
@@ -290,7 +293,7 @@ const EditCardScreen = () => {
                 onPress={() => toggleSection('numberOfStamps')}
               >
                 <View style={styles.sectionTitleContainer}>
-                  <Image source={require('../../assets/images/card-icon.png')} style={styles.sectionIcon} />
+                  <Image source={require('../../assets/images/card-number.png')} style={styles.sectionIcon} />
                   <Text style={styles.sectionTitle}>Número de sellos</Text>
                 </View>
                 <Image 
@@ -321,7 +324,7 @@ const EditCardScreen = () => {
                 onPress={() => toggleSection('prize')}
               >
                 <View style={styles.sectionTitleContainer}>
-                  <Image source={require('../../assets/images/card-icon.png')} style={styles.sectionIcon} />
+                  <Image source={require('../../assets/images/card-award.png')} style={styles.sectionIcon} />
                   <Text style={styles.sectionTitle}>Premio</Text>
                 </View>
                 <Image 
@@ -351,7 +354,7 @@ const EditCardScreen = () => {
                 onPress={() => toggleSection('conditions')}
               >
                 <View style={styles.sectionTitleContainer}>
-                  <Image source={require('../../assets/images/card-icon.png')} style={styles.sectionIcon} />
+                  <Image source={require('../../assets/images/conditions-card.png')} style={styles.sectionIcon} />
                   <Text style={styles.sectionTitle}>Condiciones</Text>
                 </View>
                 <Image 
@@ -505,28 +508,30 @@ const styles = StyleSheet.create({
   },
   customizationContainer: {
     marginBottom: 30,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
+    borderBottomColor: '#EEEEEE',
+    borderBottomWidth: 0.2,
   },
   sectionTitleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    
   },
   sectionIcon: {
-    width: 24,
-    height: 24,
+    width: 18,
+    height: 18,
     marginRight: 10,
   },
   sectionTitle: {
@@ -622,7 +627,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
