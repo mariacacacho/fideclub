@@ -10,8 +10,8 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 
 type SignUpScreenNavigationProp = NativeStackNavigationProp<
@@ -19,18 +19,67 @@ type SignUpScreenNavigationProp = NativeStackNavigationProp<
   "SignUp"
 >;
 
+type SignUpScreenRouteProp = NativeStackScreenProps<
+  RootStackParamList,
+  "SignUp"
+>['route'];
+
+// Extended type for route params to include optional stampImage
+type SignUpParams = {
+  email: string;
+  fullName: string;
+  password: string;
+  isCompany: boolean;
+  companyName: string;
+  companyDetails?: {
+    address: string;
+    phoneNumber: string;
+    branchName: string;
+    socialMedia: string;
+  };
+  stampImage?: string;
+};
+
 const SignUpScreen = () => {
   const navigation = useNavigation<SignUpScreenNavigationProp>();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const route = useRoute<SignUpScreenRouteProp>();
+  
+  // Get parameters from route
+  const { 
+    email: routeEmail, 
+    fullName: routeFullName, 
+    password: routePassword,
+    isCompany,
+    companyName,
+    companyDetails,
+    stampImage
+  } = route.params as SignUpParams;
+  
+  const [name, setName] = useState(routeFullName || "");
+  const [email, setEmail] = useState(routeEmail || "");
+  const [password, setPassword] = useState(routePassword || "");
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignUp = () => {
     // Handle sign up logic here
     console.log("Sign up with:", name, email, password, acceptTerms);
+    console.log("Company info:", isCompany, companyName);
+    
+    // Log company details if available
+    if (companyDetails) {
+      console.log("Company details:", companyDetails);
+    }
+    
+    // Log stamp image if available
+    if (stampImage) {
+      console.log("Stamp image available:", !!stampImage);
+    }
+    
     // In a real app, you would call an authentication service
+    
+    // Navigate to Main screen after successful signup
+    navigation.navigate("Main");
   };
 
   return (
@@ -40,6 +89,21 @@ const SignUpScreen = () => {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
+          {/* Back button and progress indicator */}
+          <View style={styles.header}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Image source={require('../../assets/images/arrow.png')} style={styles.backButtonIcon} />
+            </TouchableOpacity>
+            <View style={styles.progressContainer}>
+              <View style={styles.progressBar}>
+                <View style={styles.progressIndicator} />
+              </View>
+            </View>
+          </View>
+          
           <Text style={styles.title}>Crea una cuenta</Text>
           <Text style={styles.subtitle}>
             Llena el formulario debajo o regístrate con tu social account.
@@ -172,6 +236,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#fff",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  backButton: {
+    width: 35,
+    height: 35,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F4F4F4",
+    padding: 10,
+    borderRadius: 50,
+  },
+  backButtonIcon: {
+    width: 18,
+    height: 18,
+    tintColor: "#7CB9E8",
+  },
+  progressContainer: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  progressBar: {
+    height: 6,
+    backgroundColor: "#EEEEEE",
+    borderRadius: 3,
+  },
+  progressIndicator: {
+    width: "60%", // Increased from 40% to 60% to show progress
+    height: "100%",
+    backgroundColor: "#7CB9E8",
+    borderRadius: 3,
   },
   logoSocial: {
     width: 25,

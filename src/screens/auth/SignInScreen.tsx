@@ -28,8 +28,8 @@ const SignInScreen = () => {
   const handleSignIn = () => {
     // Handle sign in logic here
     console.log("Sign in with:", email, password);
-    // For now, navigate directly to Dashboard
-    navigation.navigate("Dashboard");
+    // Navigate to Main screen after successful sign in
+    navigation.navigate("Main");
   };
 
   return (
