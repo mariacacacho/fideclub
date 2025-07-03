@@ -6,32 +6,21 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
-  Modal,
-  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MainTabParamList } from '../../navigation/AppNavigator';
 import { LinearGradient } from 'expo-linear-gradient';
+import BranchSelector from '../../components/common/BranchSelector';
 type MainScreenNavigationProp = NativeStackNavigationProp<
   MainTabParamList,
   'Main'
 >;
 
-// List of available branches
-const branches = [
-  "Alamo Express",
-  "Roosevelt",
-  "Zona 10",
-  "Zona 9",
-  "Mixco",
-  "Villa Nueva"
-];
 
 const MainScreen = () => {
   const navigation = useNavigation<MainScreenNavigationProp>();
   const [selectedBranch, setSelectedBranch] = useState("Alamo Express");
-  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const handleScanClient = () => {
     // Navigate to scan client screen or open camera
@@ -49,61 +38,13 @@ const MainScreen = () => {
             resizeMode="contain"
           />
         </View>
-        <TouchableOpacity 
-          style={styles.branchSelector}
-          onPress={() => setDropdownVisible(true)}
-        >
-          <Text style={styles.branchText}>Sucursal: {selectedBranch}</Text>
-          <Image
-            source={require('../../assets/images/arrowdown-icon.png')}
-            style={styles.arrowIcon}
-          />
-        </TouchableOpacity>
+        <BranchSelector
+          selectedBranch={selectedBranch}
+          onBranchChange={setSelectedBranch}
+          style={styles.branchSelectorContainer}
+        />
       </View>
 
-      {/* Branch Selection Modal */}
-      <Modal
-        visible={dropdownVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setDropdownVisible(false)}
-      >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setDropdownVisible(false)}
-        >
-          <View style={styles.dropdownContainer}>
-            <View style={styles.dropdown}>
-              <Text style={styles.dropdownTitle}>Seleccionar Sucursal</Text>
-              <ScrollView>
-                {branches.map((branch, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={[
-                      styles.dropdownItem,
-                      selectedBranch === branch && styles.dropdownItemSelected
-                    ]}
-                    onPress={() => {
-                      setSelectedBranch(branch);
-                      setDropdownVisible(false);
-                    }}
-                  >
-                    <Text 
-                      style={[
-                        styles.dropdownItemText,
-                        selectedBranch === branch && styles.dropdownItemTextSelected
-                      ]}
-                    >
-                      {branch}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
 
       {/* Main Content */}
       <View style={styles.content}>
@@ -156,68 +97,9 @@ const styles = StyleSheet.create({
     width: 120,
     height: 40,
   },
-  branchSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderColor: '#DCDCDC',
-    borderWidth: 0.2,
-  },
-  branchText: {
-    fontSize: 14,
-    marginRight: 5,
-  },
-  arrowIcon: {
-    width: 12,
-    height: 12,
-    tintColor: '#333333',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dropdownContainer: {
-    width: '80%',
-    maxHeight: '70%',
-    backgroundColor: 'white',
-    borderRadius: 15,
-    overflow: 'hidden',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  dropdown: {
-    width: '100%',
-  },
-  dropdownTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    textAlign: 'center',
-  },
-  dropdownItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  dropdownItemSelected: {
-    backgroundColor: '#F0F8FF',
-  },
-  dropdownItemText: {
-    fontSize: 16,
-  },
-  dropdownItemTextSelected: {
-    fontWeight: 'bold',
-    color: '#4A90E2',
+  branchSelectorContainer: {
+    paddingHorizontal: 0,
+    paddingVertical: 0,
   },
   content: {
     flex: 1,

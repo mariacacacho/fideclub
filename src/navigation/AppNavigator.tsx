@@ -17,13 +17,18 @@ import EditCardScreen from '../screens/edit/EditCardScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import MainScreen from '../screens/main/MainScreen';
 import ConfigurationScreen from '../screens/configuration/ConfigurationScreen';
+import BranchesScreen from '../screens/branches/BranchesScreen';
+import CardsScreen from '../screens/cards/CardsScreen';
+import AnalyticsScreen from '../screens/analytics/AnalyticsScreen';
 
 // Import NavBar
 import NavBar from '../components/common/NavBar';
 
 // Define the stack navigator param list
 export type MainTabParamList = {
+  Branches: undefined;
   Main: undefined;
+  Analytics: undefined;
   Configuration: undefined;
 };
 
@@ -86,6 +91,7 @@ export type RootStackParamList = {
     };
   };
   Profile: undefined;
+  Cards: undefined;
   MainTabs: {
     screen?: keyof MainTabParamList;
   };
@@ -101,7 +107,10 @@ const MainTabs = () => {
       tabBar={props => <NavBar {...props} />} 
       screenOptions={{ headerShown: false }}
     >
+      <Tab.Screen name="Branches" component={BranchesScreen} />
+      <Tab.Screen name="Card" component={CardsScreen} />
       <Tab.Screen name="Main" component={MainScreen} />
+      <Tab.Screen name="Analytics" component={AnalyticsScreen} />
       <Tab.Screen name="Configuration" component={ConfigurationScreen} />
     </Tab.Navigator>
   );
@@ -128,6 +137,7 @@ const AppNavigator = () => {
         <Stack.Screen name="QR" component={QRScreen} />
         <Stack.Screen name="EditCard" component={EditCardScreen} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Cards" component={CardsScreen} />
         <Stack.Screen name="MainTabs" component={MainTabs} />
       </Stack.Navigator>
     </NavigationContainer>

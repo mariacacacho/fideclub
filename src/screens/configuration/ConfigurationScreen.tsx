@@ -2,16 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MainTabParamList } from '../../navigation/AppNavigator';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 
 type ConfigurationScreenNavigationProp = NativeStackNavigationProp<
-  MainTabParamList,
-  'Configuration'
+  RootStackParamList
 >;
 
 const ConfigurationScreen = () => {
   const navigation = useNavigation<ConfigurationScreenNavigationProp>();
   const [showProCard, setShowProCard] = useState(true);
+
+  const handleLogout = () => {
+    navigation.navigate("SignIn");
+  }
 
   const handleHideProCard = () => {
     setShowProCard(false);
@@ -58,7 +61,7 @@ const ConfigurationScreen = () => {
           <View style={styles.optionsContainer}>
           <TouchableOpacity style={styles.option}>
             <Image source={require('../../assets/images/subscription-config.png')} style={styles.optionIcon} />
-            <Text style={styles.optionText}>Editar suscripción</Text>
+            <Text style={styles.optionText}>Suscripción</Text>
                         <View style={styles.proBadge}>
               <Text style={styles.proBadgeText}>Free</Text>
             </View>
@@ -66,7 +69,7 @@ const ConfigurationScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.option}>
             <Image source={require('../../assets/images/card-config.png')} style={styles.optionIcon} />
-            <Text style={styles.optionText}>Método de pago</Text>
+            <Text style={styles.optionText}>Métodos de pago</Text>
             <Image source={require('../../assets/images/arrow-right.png')} style={styles.arrowIcon} />
           </TouchableOpacity>
           </View>
@@ -74,7 +77,7 @@ const ConfigurationScreen = () => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Otras acciones</Text>
-          <TouchableOpacity style={styles.logoutOption}>
+          <TouchableOpacity style={styles.logoutOption} onPress={handleLogout}>
             <Image source={require('../../assets/images/logout-config.png')} style={styles.optionIcon} />
             <Text style={styles.logoutText}>Cerrar sesión</Text>
           </TouchableOpacity>
@@ -97,9 +100,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     marginTop: 20,
-    marginBottom: 10,
     marginLeft: 20,
   },
   proCard: {

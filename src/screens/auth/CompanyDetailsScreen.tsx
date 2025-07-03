@@ -38,6 +38,9 @@ const CompanyDetailsScreen = () => {
   const [socialMedia, setSocialMedia] = useState('');
 
   const handleContinue = () => {
+    // Only proceed if all required fields are filled
+    if (!isFormValid) return;
+    
     // Navigate to the fidelity card screen with all collected information
     navigation.navigate('FidelityCard', {
       email,
@@ -52,6 +55,11 @@ const CompanyDetailsScreen = () => {
       }
     });
   };
+
+  // Check if form is valid based on required fields
+  const isFormValid = address.trim().length > 0 && 
+                     phoneNumber.trim().length > 0 && 
+                     branchName.trim().length > 0;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -126,10 +134,17 @@ const CompanyDetailsScreen = () => {
               
               {/* Continue Button */}
               <TouchableOpacity 
-                style={styles.button} 
+                style={[
+                  styles.button, 
+                  isFormValid ? styles.buttonEnabled : styles.buttonDisabled
+                ]} 
                 onPress={handleContinue}
+                disabled={!isFormValid}
               >
-                <Text style={styles.buttonText}>Continuar</Text>
+                <Text style={[
+                  styles.buttonText,
+                  isFormValid ? styles.buttonTextEnabled : styles.buttonTextDisabled
+                ]}>Continuar</Text>
               </TouchableOpacity>
             </View>
 
@@ -223,7 +238,6 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: '#7CB9E8',
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -234,10 +248,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  buttonEnabled: {
+    backgroundColor: '#3F8FFD',
+  },
+  buttonDisabled: {
+    backgroundColor: '#7CB9E8',
+  },
   buttonText: {
-    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '500',
+  },
+  buttonTextEnabled: {
+    color: '#FFFFFF',
+  },
+  buttonTextDisabled: {
+    color: '#FFFFFF',
   },
   termsContainer: {
     marginTop: 30,

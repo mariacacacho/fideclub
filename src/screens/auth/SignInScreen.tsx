@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,310 +6,229 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../navigation/AppNavigator";
+  SafeAreaView,
+  StatusBar,
+  Dimensions,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
-type SignInScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "SignIn"
->;
+const { width, height } = Dimensions.get('window');
 
-const SignInScreen = () => {
-  const navigation = useNavigation<SignInScreenNavigationProp>();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const SignInScreen = ({ navigation }: any) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignIn = () => {
-    // Handle sign in logic here
-    console.log("Sign in with:", email, password);
-    // Navigate to Main screen after successful sign in
-    navigation.navigate("Main");
+  const handleContinue = () => {
+    // Handle login logic here
+    console.log('Login attempt:', { email, password });
+    navigation.reset({
+      index: 0,
+      routes: [{ 
+        name: 'MainTabs',
+        params: { screen: 'Main' }
+      }],
+    });
+  };
+
+  const handleRegister = () => {
+    navigation.navigate('EmailSignUp');
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Iniciar Sesión</Text>
-          <Text style={styles.subtitle}>
-            Hola, ¡qué bueno tenerte de vuelta!
-          </Text>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#f5f5f5" />
+      
+      {/* Curved Background Design */}
+      <View style={styles.curvedContainer}>
+        <Image
+          source={require('../../assets/images/login-image.png')}
+          style={styles.loginImage}
+          resizeMode="contain"
+        />
+      </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Correo Electrónico</Text>
+      {/* Logo */}
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../../assets/images/logofideclub-color.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
+
+      {/* Form Container */}
+      <View style={styles.formContainer}>
+        {/* Email Input */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Correo Electrónico</Text>
+          <TextInput
+            style={styles.textInput}
+            value={email}
+            onChangeText={setEmail}
+            placeholder="tucorreo@correo.com"
+            placeholderTextColor="#C7C7CD"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        </View>
+
+        {/* Password Input */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Contraseña</Text>
+          <View style={styles.passwordContainer}>
             <TextInput
-              style={styles.input}
-              placeholder="ejemplo@mail.com"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
+              style={[styles.textInput, styles.passwordInput]}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="••••••••"
+              placeholderTextColor="#C7C7CD"
+              secureTextEntry={!showPassword}
               autoCapitalize="none"
+              autoCorrect={false}
             />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={[styles.input, styles.passwordInput]}
-                placeholder="••••••••"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity
+            <TouchableOpacity
+              style={styles.eyeButton}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Image
+                source={require('../../assets/images/eye-icon.png')}
                 style={styles.eyeIcon}
-                onPress={() => setShowPassword(!showPassword)}
-              >
-                <Image
-                  source={require("../../assets/images/eye-icon.png")}
-                  style={styles.eyeIconImage}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.forgotPassword}>
-            <Text style={styles.forgotPasswordText}>
-              ¿Olvidaste la contraseña?
-            </Text>
-          </View>
-
-          <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-            <Text style={styles.buttonText}>Iniciar Sesión</Text>
-          </TouchableOpacity>
-
-          {/* Social Login Section */}
-          <View style={styles.socialLoginContainer}>
-            <View style={styles.dividerContainer}>
-              <View style={styles.divider} />
-              <Text style={styles.dividerText}>O Inicia sesión con</Text>
-              <View style={styles.divider} />
-            </View>
-
-            <View style={styles.socialButtonsContainer}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Image
-                  source={require("../../assets/images/apple-logo.png")}
-                  style={styles.logoSocial}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.socialButton, styles.googleButton]}
-              >
-                <Image
-                  source={require("../../assets/images/google-logo.png")}
-                  style={styles.logoSocial}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.socialButton, styles.facebookButton]}
-              >
-                <Image
-                  source={require("../../assets/images/facebook-logo.png")}
-                  style={styles.logoSocial}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.registerContainer}>
-              <Text style={styles.registerText}>
-                ¿No tienes una cuenta?{" "}
-                <Text
-                  style={styles.registerLink}
-                  onPress={() => navigation.navigate("SignUp")}
-                >
-                  Regístrate
-                </Text>
-              </Text>
-            </View>
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+        {/* Continue Button */}
+        <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+          <LinearGradient
+            colors={['#7DD3C0', '#5BA7F7']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.continueButtonGradient}
+          >
+            <Text style={styles.continueButtonText}>Iniciar sesión</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* Register Link */}
+        <View style={styles.registerContainer}>
+          <Text style={styles.registerText}>¿Todavía no tienes cuenta en FideClub? </Text>
+          <TouchableOpacity onPress={handleRegister}>
+            <Text style={styles.registerLink}>Regístrate</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Terms and Conditions */}
+        <Text style={styles.termsText}>
+        Versión 1.0.0
+        </Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-  },
   container: {
     flex: 1,
-    padding: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: '#F8F8F8',
+  },
+  curvedContainer: {
+    position: 'relative',
+    height: height * 0.4,
+    overflow: 'hidden',
+  },
+  loginImage: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    right: 0,
+    width: width,
+    height: height * 0.3,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: -80,
+    marginBottom: 0,
   },
   logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 30,
+    width: 120,
+    height: 60,
   },
-  logoSocial: {
-    width: 25,
-    height: 25,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: "#333",
-  },
-  subtitle: {
-    color: "#C0C0C0",
-    fontSize: 16,
-    marginBottom: 50,
+  formContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   inputContainer: {
-    width: "100%",
-    marginBottom: 20,
+    marginBottom: 25,
   },
-  label: {
+  inputLabel: {
     fontSize: 16,
-    marginBottom: 10,
-    color: "#333",
+    color: '#333333',
+    marginBottom: 0,
   },
-  input: {
-    width: "100%",
+  textInput: {
     height: 50,
-    borderWidth: 1,
-    borderColor: "#FDF4EE",
-    borderRadius: 8,
-    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5EA',
     fontSize: 16,
-    backgroundColor: "#FDF4EE",
+    color: '#333333',
+    paddingVertical: 10,
   },
-  button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#E77024",
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
+  passwordContainer: {
+    position: 'relative',
   },
-  buttonText: {
-    color: "#fff",
+  passwordInput: {
+    paddingRight: 50,
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: 10,
+    top: 15,
+    padding: 5,
+  },
+  eyeIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#C7C7CD',
+  },
+  continueButton: {
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  continueButtonGradient: {
+    height: 55,
+    borderRadius: 27.5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  continueButtonText: {
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: "bold",
-  },
-  forgotPassword: {
-    width: "100%",
-    alignItems: "flex-end",
-  },
-  forgotPasswordText: {
-    color: "#E77024",
-    textDecorationLine: "underline",
-    fontWeight: "500",
-  },
-  // Social Login Styles
-  socialLoginContainer: {
-    width: "100%",
-    marginTop: 30,
-    alignItems: "center",
-  },
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginVertical: 20,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "#E0E0E0",
-  },
-  dividerText: {
-    paddingHorizontal: 10,
-    color: "#888",
-    fontSize: 14,
-  },
-  socialButtonsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    width: "100%",
-    marginVertical: 15,
-  },
-  socialButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 15,
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    elevation: 2,
-  },
-  socialButtonIcon: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  appleIcon: {
-    color: "#000",
-    fontSize: 28,
-  },
-  googleButton: {
-    borderColor: "#D9D9D9",
-  },
-  googleIcon: {
-    color: "#D9D9D9",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  facebookButton: {
-    borderColor: "#D9D9D9",
-  },
-  facebookIcon: {
-    color: "#3b5998",
-    fontSize: 28,
-    fontWeight: "bold",
   },
   registerContainer: {
-    marginTop: 30,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 30,
   },
   registerText: {
     fontSize: 14,
-    color: "#888",
+    color: '#8E8E93',
   },
   registerLink: {
-    color: "#E77024",
-    textDecorationLine: "underline",
-    fontWeight: "500",
+    fontSize: 14,
+    color: '#5BA7F7',
   },
-  passwordContainer: {
-    position: "relative",
-    width: "100%",
-  },
-  passwordInput: {
-    paddingRight: 50, // Space for the eye icon
-  },
-  eyeIcon: {
-    position: "absolute",
-    right: 15,
-    top: 12,
-  },
-  eyeIconImage: {
-    width: 20,
-    height: 20,
-    marginTop: 5,
+  termsText: {
+    fontSize: 12,
+    color: '#8E8E93',
+    textAlign: 'center',
+    lineHeight: 16,
+    paddingHorizontal: 20,
   },
 });
 

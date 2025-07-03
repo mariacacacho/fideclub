@@ -28,7 +28,15 @@ const NavBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation })
         };
 
         let icon;
-        if (route.name === 'Main') {
+
+        if (route.name === 'Branches') {
+          icon = (
+            <Image
+              source={require('../../assets/images/branches-menu.png')}
+              style={[styles.navIcon, { tintColor: isFocused ? '#24252A' : '#C7C5C5' }]}
+            />
+          );
+        } else if (route.name === 'Main') {
           icon = (
             <View style={styles.centerNavButton}>
               <LinearGradient
@@ -56,7 +64,22 @@ const NavBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation })
               style={[styles.navIcon, { tintColor: isFocused ? '#24252A' : '#C7C5C5' }]}
             />
           );
+        } else if (route.name === 'Analytics') {
+          icon = (
+            <Image
+              source={require('../../assets/images/analytics-menu.png')}
+              style={[styles.navIcon, { tintColor: isFocused ? '#24252A' : '#C7C5C5' }]}
+            />
+          );
+        } else if (route.name === 'Card') {
+          icon = (
+            <Image
+              source={require('../../assets/images/card-menu.png')}
+              style={[styles.navIcon, { tintColor: isFocused ? '#24252A' : '#C7C5C5' }]}
+            />
+          );
         }
+
 
         return (
           <TouchableOpacity
@@ -83,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderTopColor: '#EEEEEE',
-    paddingBottom: 5,
+    paddingBottom: 20,
   },
   navItem: {
     flex: 1,
@@ -104,7 +127,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    marginTop: 10,
+    marginTop: 5,
     overflow: 'hidden',
   },
   navIcon: {

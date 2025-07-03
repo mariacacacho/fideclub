@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
-  Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
+import BranchSelector from "../../components/common/BranchSelector";
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -29,19 +29,11 @@ const barbershopData = [
   { id: '8', image: require('../../assets/images/barbershop-placeholder.png') },
 ];
 
-// List of available branches
-const branches = [
-  "Roosevelt",
-  "Zona 10",
-  "Zona 9",
-  "Mixco",
-  "Villa Nueva"
-];
 
 const DashboardScreen = () => {
   const navigation = useNavigation<DashboardScreenNavigationProp>();
   const [selectedBranch, setSelectedBranch] = useState("Roosevelt");
-  const [dropdownVisible, setDropdownVisible] = useState(false);
+  
   const renderBarbershopItem = ({ item }) => (
     <TouchableOpacity style={styles.barbershopItem}>
       <Image source={item.image} style={styles.barbershopImage} />
@@ -68,60 +60,10 @@ const DashboardScreen = () => {
       <Text style={styles.title}>Hola, María</Text>
       <Text style={styles.subtitle}>Te damos la bienvenida una vez más</Text>
 
-      <View style={styles.branchSection}>
-        <View style={styles.branchLabelContainer}>
-          <Text style={styles.branchLabel}>Sucursal: </Text>
-          <Text style={styles.branchName}>{selectedBranch}</Text>
-        </View>
-        <TouchableOpacity 
-          style={styles.changeButton}
-          onPress={() => setDropdownVisible(true)}
-        >
-          <Text style={styles.changeButtonText}>Cambiar</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Branch Selection Modal */}
-      <Modal
-        visible={dropdownVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setDropdownVisible(false)}
-      >
-        <TouchableOpacity 
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setDropdownVisible(false)}
-        >
-          <View style={styles.dropdownContainer}>
-            <View style={styles.dropdown}>
-              <Text style={styles.dropdownTitle}>Seleccionar Sucursal</Text>
-              {branches.map((branch, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.dropdownItem,
-                    selectedBranch === branch && styles.dropdownItemSelected
-                  ]}
-                  onPress={() => {
-                    setSelectedBranch(branch);
-                    setDropdownVisible(false);
-                  }}
-                >
-                  <Text 
-                    style={[
-                      styles.dropdownItemText,
-                      selectedBranch === branch && styles.dropdownItemTextSelected
-                    ]}
-                  >
-                    {branch}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      <BranchSelector
+        selectedBranch={selectedBranch}
+        onBranchChange={setSelectedBranch}
+      />
 
       <View style={styles.barbershopSection}>
         <View style={styles.barbershopHeader}>
@@ -215,50 +157,6 @@ const DashboardScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dropdownContainer: {
-    width: '80%',
-    maxHeight: '70%',
-    backgroundColor: 'white',
-    borderRadius: 15,
-    overflow: 'hidden',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  dropdown: {
-    width: '100%',
-  },
-  dropdownTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    textAlign: 'center',
-  },
-  dropdownItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  dropdownItemSelected: {
-    backgroundColor: '#FDF4EE',
-  },
-  dropdownItemText: {
-    fontSize: 16,
-  },
-  dropdownItemTextSelected: {
-    fontWeight: 'bold',
-    color: '#F26E21',
-  },
   barbershopItem: {
     width: '22%',
     aspectRatio: 1,
@@ -300,26 +198,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 20,
   },
-  branchSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  branchLabelContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  branchLabel: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  branchName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#F26E21",
-  },
   checkIcon: {
     width: 15,
     height: 15,
@@ -333,16 +211,6 @@ const styles = StyleSheet.create({
   logoUser: {
     width: 22,
     height: 22
-  },
-  changeButton: {
-    backgroundColor: "#333",
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  changeButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
   },
   logoSection: {
     backgroundColor: "#24252A",

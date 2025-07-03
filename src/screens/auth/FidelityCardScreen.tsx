@@ -15,6 +15,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import * as ImagePicker from 'expo-image-picker';
+import CustomCard, { CardData } from '../../components/common/CustomCard';
 
 type FidelityCardScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -95,8 +96,8 @@ const FidelityCardScreen = () => {
   };
 
   const handleContinue = () => {
-    // Navigate to the Main screen
-    navigation.navigate('Main');
+    // Navigate to the MainTabs screen
+    navigation.navigate('MainTabs');
   };
   
   const handleCustomize = () => {
@@ -111,6 +112,26 @@ const FidelityCardScreen = () => {
         condiciones: condiciones,
       }
     });
+  };
+
+  const handleEditCard = (cardId: number) => {
+    handleCustomize();
+  };
+
+  // Create card data for CustomCard component
+  const createCardData = (): CardData => {
+    const totalStamps = parseInt(numberOfSquares);
+    const filled = parseInt(filledStamps);
+    const stamps = Array.from({ length: totalStamps }, (_, index) => index < filled);
+    
+    return {
+      id: 1,
+      businessName: companyName || "The Barber's House",
+      backgroundColor: cardBackgroundColor,
+      textColor: '#333333',
+      stamps: stamps,
+      isCompleted: filled >= totalStamps,
+    };
   };
 
   return (
@@ -142,69 +163,24 @@ const FidelityCardScreen = () => {
               <Text style={styles.subtitle}>¿Cómo quieres que luzca tu sello?</Text>
             </View>
 
-            {/* Card Preview */}
+            {/* Card Preview using CustomCard */}
             <View style={styles.cardPreviewContainer}>
-              <View style={[styles.cardPreview, { backgroundColor: cardBackgroundColor }]}>
-                <Text style={styles.cardBusinessName}>{companyName || "The Barber's House"}</Text>
-                
-                {/* Dynamic grid of stamp placeholders based on numberOfSquares */}
-                <View style={styles.stampGrid}>
-                  {Array.from({ length: Math.ceil(parseInt(numberOfSquares) / 4) }).map((_, rowIndex) => (
-                    <View key={`row-${rowIndex}`} style={styles.stampRow}>
-                      {Array.from({ length: Math.min(4, parseInt(numberOfSquares) - rowIndex * 4) }).map((_, colIndex) => {
-                        const stampIndex = rowIndex * 4 + colIndex;
-                        const isFilled = stampIndex < parseInt(filledStamps);
-                        
-                        // First stamp is always the one that can be edited
-                        if (rowIndex === 0 && colIndex === 0) {
-                          return (
-                            <TouchableOpacity 
-                              key={`stamp-${stampIndex}`}
-                              style={styles.stampPlaceholder}
-                              onPress={openPhotoLibrary}
-                            >
-                              {stampImage ? (
-                                <Image source={{ uri: stampImage }} style={styles.stampImage} />
-                              ) : (
-                                <View style={styles.iconContainer}>
-                                  <Image source={require('../../assets/images/camera-icon.png')} style={styles.cameraIcon} />
-                                  <Text style={styles.iconText}>Galería</Text>
-                                </View>
-                              )}
-                            </TouchableOpacity>
-                          );
-                        }
-                        
-                        // Other stamps
-                        return (
-                          <View 
-                            key={`stamp-${stampIndex}`}
-                            style={styles.stampPlaceholder}
-                          >
-                            {isFilled && stampImage ? (
-                              <Image source={{ uri: stampImage }} style={styles.stampImage} />
-                            ) : null}
-                          </View>
-                        );
-                      })}
-                    </View>
-                  ))}
-                </View>
-                
-                {/* Premio and Condiciones if they exist */}
-                {premio ? (
-                  <View style={styles.premioContainer}>
-                    <Text style={styles.premioLabel}>Premio:</Text>
-                    <Text style={styles.premioText}>{premio}</Text>
-                  </View>
-                ) : null}
-                
-                {condiciones ? (
-                  <View style={styles.condicionesContainer}>
-                    <Text style={styles.condicionesLabel}>Condiciones:</Text>
-                    <Text style={styles.condicionesText}>{condiciones}</Text>
-                  </View>
-                ) : null}
+              <CustomCard 
+                card={createCardData()} 
+                onEdit={handleEditCard}
+              />
+              
+              {/* Additional customization options */}
+              <View style={styles.customizationOptions}>
+                <TouchableOpacity 
+                  style={styles.stampCustomizationButton}
+                  onPress={openPhotoLibrary}
+                >
+                  <Image source={require('../../assets/images/camera-icon.png')} style={styles.cameraIcon} />
+                  <Text style={styles.customizationText}>
+                    {stampImage ? 'Cambiar sello' : 'Seleccionar sello'}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -291,43 +267,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 40,
   },
-  cardPreview: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  cardBusinessName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333333',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  stampGrid: {
-    width: '100%',
-  },
-  stampRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  stampPlaceholder: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
-    marginLeft: 10,
-  },
   cameraIcon: {
     width: 24,
     height: 24,
@@ -355,7 +294,7 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: '#7CB9E8',
+    backgroundColor: '#3F8FFD',
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -422,6 +361,33 @@ const styles = StyleSheet.create({
   condicionesText: {
     fontSize: 12,
     color: '#666666',
+  },
+  // New customization styles
+  customizationOptions: {
+    marginTop: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  stampCustomizationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#7CB9E8',
+    borderRadius: 15,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  customizationText: {
+    marginLeft: 10,
+    fontSize: 14,
+    color: '#7CB9E8',
+    fontWeight: '500',
   },
 });
 

@@ -78,8 +78,14 @@ const SignUpScreen = () => {
     
     // In a real app, you would call an authentication service
     
-    // Navigate to Main screen after successful signup
-    navigation.navigate("Main");
+    // Navigate based on user type
+    if (isCompany) {
+      // For companies, navigate to Dashboard or appropriate company screen
+      navigation.navigate("Dashboard");
+    } else {
+      // For regular users, navigate to MainTabs with Main screen
+      navigation.navigate("MainTabs", { screen: "Main" });
+    }
   };
 
   return (

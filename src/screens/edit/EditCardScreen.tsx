@@ -15,6 +15,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import * as ImagePicker from 'expo-image-picker';
+import CustomCard, { CardData } from '../../components/common/CustomCard';
 
 type EditCardScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -105,7 +106,10 @@ const EditCardScreen = () => {
     // Navigate to Main screen
     navigation.reset({
       index: 0,
-      routes: [{ name: 'MainTabs' }],
+      routes: [{ 
+        name: 'MainTabs',
+        params: { screen: 'Main' }
+      }],
     });
   };
 
@@ -146,6 +150,29 @@ const EditCardScreen = () => {
     }
   };
 
+  // Function to handle edit card from CustomCard
+  const handleEditCard = (cardId: number) => {
+    // This function is called when the edit button on CustomCard is pressed
+    // Since we're already in edit mode, we can just scroll to customization options
+    // or show a message that they're already editing
+  };
+
+  // Create card data for CustomCard component
+  const createCardData = (): CardData => {
+    const totalStamps = parseInt(numberOfSquares);
+    const filled = parseInt(filledStamps);
+    const stamps = Array.from({ length: totalStamps }, (_, index) => index < filled);
+    
+    return {
+      id: 1,
+      businessName: "The Barber's House",
+      backgroundColor: cardBackgroundColor,
+      textColor: '#333333',
+      stamps: stamps,
+      isCompleted: filled >= totalStamps,
+    };
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
@@ -175,50 +202,12 @@ const EditCardScreen = () => {
               <Text style={styles.subtitle}>Puedes personalizar tu tarjeta ahora u omitir este paso y personalizarla después</Text>
             </View>
 
-            {/* Card Preview */}
+            {/* Card Preview using CustomCard */}
             <View style={styles.cardPreviewContainer}>
-              <View style={[styles.cardPreview, { backgroundColor: cardBackgroundColor }]}>
-                <Text style={styles.cardBusinessName}>The Barber's House</Text>
-                
-                {/* Grid of stamp placeholders */}
-                <View style={styles.stampGrid}>
-                  {/* First row */}
-                  <View style={styles.stampRow}>
-                    {[0, 1, 2, 3].map((index) => (
-                      <TouchableOpacity 
-                        key={`stamp-${index}`}
-                        style={[
-                          styles.stampPlaceholder,
-                          selectedStampIndex === index && styles.selectedStamp
-                        ]}
-                        onPress={() => handleStampSelect(index)}
-                      >
-                        {stampImage ? (
-                          <Image source={{ uri: stampImage }} style={styles.stampImage} />
-                        ) : null}
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                  
-                  {/* Second row */}
-                  <View style={styles.stampRow}>
-                    {[4, 5, 6, 7].map((index) => (
-                      <TouchableOpacity 
-                        key={`stamp-${index}`}
-                        style={[
-                          styles.stampPlaceholder,
-                          selectedStampIndex === index && styles.selectedStamp
-                        ]}
-                        onPress={() => handleStampSelect(index)}
-                      >
-                        {stampImage ? (
-                          <Image source={{ uri: stampImage }} style={styles.stampImage} />
-                        ) : null}
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-              </View>
+              <CustomCard 
+                card={createCardData()} 
+                onEdit={handleEditCard}
+              />
             </View>
 
             {/* Customization Options */}
@@ -462,50 +451,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 30,
   },
-  cardPreview: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  cardBusinessName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333333',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  stampGrid: {
-    width: '100%',
-  },
-  stampRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  stampPlaceholder: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  selectedStamp: {
-    borderColor: '#7CB9E8',
-    borderWidth: 2,
-  },
-  stampImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 5,
-  },
   customizationContainer: {
     marginBottom: 30,
     borderRadius: 10,
@@ -623,7 +568,7 @@ const styles = StyleSheet.create({
   skipButton: {
     width: '100%',
     height: 50,
-    backgroundColor: '#7CB9E8',
+    backgroundColor: '#3F8FFD',
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',

@@ -38,6 +38,9 @@ const ProfileCompletionScreen = () => {
   const [companyName, setCompanyName] = useState('');
 
   const handleContinue = () => {
+    // Only proceed if all required fields are filled
+    if (!isFormValid) return;
+    
     if (isCompany) {
       // If registering as a company, navigate to company details screen
       navigation.navigate('CompanyDetails', {
@@ -48,15 +51,20 @@ const ProfileCompletionScreen = () => {
       });
     } else {
       // Otherwise, navigate directly to the sign up screen
-      navigation.navigate('SignUp', {
-        email,
-        fullName,
-        password,
-        isCompany,
-        companyName
-      });
+      navigation.reset({
+      index: 0,
+      routes: [{ 
+        name: 'MainTabs',
+        params: { screen: 'Main' }
+      }],
+    });
     }
   };
+
+  // Check if form is valid based on required fields
+  const isFormValid = fullName.trim().length > 0 && 
+                     password.trim().length > 0 && 
+                     (!isCompany || companyName.trim().length > 0);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -148,10 +156,17 @@ const ProfileCompletionScreen = () => {
               
               {/* Continue Button */}
               <TouchableOpacity 
-                style={styles.button} 
+                style={[
+                  styles.button, 
+                  isFormValid ? styles.buttonEnabled : styles.buttonDisabled
+                ]} 
                 onPress={handleContinue}
+                disabled={!isFormValid}
               >
-                <Text style={styles.buttonText}>Continuar</Text>
+                <Text style={[
+                  styles.buttonText,
+                  isFormValid ? styles.buttonTextEnabled : styles.buttonTextDisabled
+                ]}>Continuar</Text>
               </TouchableOpacity>
             </View>
 
@@ -269,7 +284,6 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: '#7CB9E8',
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -280,10 +294,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  buttonEnabled: {
+    backgroundColor: '#3F8FFD',
+  },
+  buttonDisabled: {
+    backgroundColor: '#7CB9E8',
+  },
   buttonText: {
-    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '500',
+  },
+  buttonTextEnabled: {
+    color: '#FFFFFF',
+  },
+  buttonTextDisabled: {
+    color: '#FFFFFF',
   },
   termsContainer: {
     marginTop: 30,

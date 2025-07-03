@@ -25,9 +25,13 @@ const EmailSignUpScreen = () => {
   const [email, setEmail] = useState('');
 
   const handleContinue = () => {
-    // Navigate to the profile completion screen with the email
-    navigation.navigate('ProfileCompletion', { email });
+    // Only navigate if email is not empty
+    if (email.trim()) {
+      navigation.navigate('ProfileCompletion', { email });
+    }
   };
+
+  const isEmailValid = email.trim().length > 0;
 
   const handleSignIn = () => {
     navigation.navigate('SignIn');
@@ -79,10 +83,17 @@ const EmailSignUpScreen = () => {
               />
               
               <TouchableOpacity 
-                style={styles.button} 
+                style={[
+                  styles.button, 
+                  isEmailValid ? styles.buttonEnabled : styles.buttonDisabled
+                ]} 
                 onPress={handleContinue}
+                disabled={!isEmailValid}
               >
-                <Text style={styles.buttonText}>Registrarme</Text>
+                <Text style={[
+                  styles.buttonText,
+                  isEmailValid ? styles.buttonTextEnabled : styles.buttonTextDisabled
+                ]}>Registrarme</Text>
               </TouchableOpacity>
             </View>
 
@@ -184,7 +195,6 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: '#7CB9E8',
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -195,9 +205,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  buttonEnabled: {
+    backgroundColor: '#3F8FFD',
+  },
+  buttonDisabled: {
+    backgroundColor: '#7CB9E8',
+  },
   buttonText: {
-    color: '#FFFFFF',
     fontSize: 16,
+  },
+  buttonTextEnabled: {
+    color: '#FFFFFF',
+  },
+  buttonTextDisabled: {
+    color: '#FFFFFF',
   },
   signInContainer: {
     marginTop: 30,
